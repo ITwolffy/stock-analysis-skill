@@ -7,11 +7,13 @@ description: 个股投资深度分析(A股+港股)。拉取经过验证的结构
 
 把「数据可靠性」交给脚本、把「判断深度」交给模型:数字一律来自 akshare 底稿,定性靠搜索补充,产出给自己做决策用的研究报告。
 
-## 硬编码路径(与调用时 cwd 无关,禁止改用相对路径)
+## 输出路径(勿依赖调用时的 cwd)
 
-- 底稿目录:`D:\WorkSpace\Claude\股票分析\_data\`(当日底稿 `<code>-<YYYYMMDD>.md` 已存在则直接复用)
-- 报告输出:`D:\WorkSpace\Claude\股票分析\<code>-<名称>-<YYYY-MM>.md` + 同名 `.html`
-- 脚本:`~/.claude/skills/stock-analysis/scripts/fetch_data.py`(下称 fetch_data.py)
+- 输出根目录 = 环境变量 `STOCK_ANALYSIS_DIR`(推荐设固定位置);未设置则为**当前目录下的 `股票分析/` 子目录**
+- 底稿:`<根>/_data/<code>-<YYYYMMDD>.md`(当日底稿已存在则直接复用)
+- 报告:`<根>/<code>-<名称>-<YYYY-MM>.md` + 同名 `.html`
+- 本机常规会话(cwd 为 D:\WorkSpace\Claude)落在 `D:\WorkSpace\Claude\股票分析\`
+- 脚本:本 skill 目录下的 `scripts/fetch_data.py`(下称 fetch_data.py)
 
 ## 执行流程(5 步,顺序执行)
 

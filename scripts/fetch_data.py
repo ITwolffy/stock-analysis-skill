@@ -12,7 +12,8 @@ stock-analysis skill · 数据层
     - 6位纯数字 = A股(60/68/00/30 开头);北交所(4/8/92开头)与 B股(900/200)拒绝
     - 4~5位纯数字 = 港股(自动补零到5位)
     - 名称 = 先查 A股代码表(缓存7天),再查内置常见港股表;多命中列候选退出
-    - 输出固定 D:\\WorkSpace\\Claude\\股票分析\\_data\\<code>-<YYYYMMDD>.md,与 cwd 无关
+    - 输出到 STOCK_ANALYSIS_DIR 指定的目录(未设置则为当前目录下的 股票分析/ 子目录)
+      底稿位于 <根>/_data/<code>-<YYYYMMDD>.md
     - 当日底稿已存在直接复用;--refresh 强制重拉
     - 单项接口失败只标注「获取失败」,不中断整体
 """
@@ -35,8 +36,9 @@ socket.setdefaulttimeout(30)
 
 warnings.filterwarnings("ignore")
 
-# 报告输出根目录:默认本机路径,可用环境变量 STOCK_ANALYSIS_DIR 覆盖(发布到 GitHub 供他人使用)
-REPORT_DIR = Path(os.environ.get("STOCK_ANALYSIS_DIR") or r"D:\WorkSpace\Claude\股票分析")
+# 报告输出根目录:环境变量 STOCK_ANALYSIS_DIR 优先(推荐固定位置时设置);
+# 未设置则落到当前目录下的 股票分析/ 子目录,保证任意 cwd 可用
+REPORT_DIR = Path(os.environ.get("STOCK_ANALYSIS_DIR") or (Path.cwd() / "股票分析"))
 DATA_DIR = REPORT_DIR / "_data"
 NAME_CACHE = DATA_DIR / "name_cache_a.csv"
 NAME_CACHE_TTL_DAYS = 7
